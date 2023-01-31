@@ -125,6 +125,7 @@ header{
   font-size: 18px;
   padding-bottom: 5px;
   border-radius: 3px;
+  cursor: pointer;
 }
 
 .icon-corrigir{
@@ -139,6 +140,9 @@ header{
   margin-right: 5px;
 }
 
+.icon-ativo{
+  fill: #42A3B1;
+}
 
 .btn-ativo, .icon-corrigir path{
   border-bottom: solid 3px #42A3B1;
@@ -198,6 +202,11 @@ header{
   border-radius: 2px;
   padding: 10px 30px;
   margin-top: 30px;
+}
+
+.btn-corrigir:hover{
+  font-size: 20px;
+  cursor: pointer;
 }
 
 

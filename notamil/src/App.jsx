@@ -1,11 +1,82 @@
 import React from 'react';
+import {useState, useEffect} from 'react'
 import './App.css';
 
 import Logo from './assets/logo.png'
 import Figura1ComoFunciona from './assets/figuraComoFunciona.png'
 import Figura2ComoFunciona from './assets/figuraComoFunciona2.png'
 
-function App() {
+export default function App() {
+  const [numeroPalavras, setPalavras] = useState('0');
+  const [numeroCaracteres, setCaracteres] = useState('0');
+
+
+  /* FUNÇÃO RESPONSAVEL PELA CONTAGEM E PALAVRAS E CARACTERES INSERIDOS */
+  function Contagem(){
+    const texto = document.getElementsByClassName("texto-corrigir")[0].value;
+    var caracteres = 0 ;
+    var palavras = texto.split(" ");
+    var nPalavras = texto.split(" ").length;
+
+    palavras.forEach((palavra) => {
+      if (palavra === "") {
+        nPalavras -= 1
+      } else {
+        caracteres += palavra.length;
+      }
+    });
+
+    setPalavras(nPalavras);
+    setCaracteres(caracteres);
+  }
+
+
+  /*  FUNÇÃO RESPONSAVEL POR TROCAR TAB DE CORRIGIR REDAÇÃO PARA GERAR REDAÇÃO E VICE E VERSA  */
+
+  function TrocarTab(){
+    const btnTroca = document.querySelectorAll(".container-btn button");
+    const vetorGerar = document.querySelectorAll(".icon-gerar path");
+    const vetorAvaliar = document.querySelectorAll(".icon-corrigir path");
+
+    const activeTab = (index) => {
+      
+      btnTroca.forEach((content) => {
+        content.classList.replace('btn-ativo', 'btn-desligado');
+      });
+      
+      if (index === 0) {
+        vetorGerar.forEach((content) => {
+          content.style.fill = '#353535'
+        })
+        vetorAvaliar.forEach((content) => {
+          content.style.fill = '#42A3B1'
+        })
+      } else if (index === 1){
+        vetorGerar.forEach((content) => {
+          content.style.fill = '#42A3B1'
+        })
+        vetorAvaliar.forEach((content) => {
+          content.style.fill = '#353535'
+        })
+      }
+
+      btnTroca[index].classList.replace('btn-desligado', 'btn-ativo');
+    }
+
+    btnTroca.forEach((btn, index) => {
+      console.log("testeeeeeee");
+      btn.addEventListener('click', () => {
+        activeTab(index);
+      });
+    });
+  }
+  
+  useEffect(() => {
+    TrocarTab()
+  });
+
+  
+
   return (
     <>
       <header> 
@@ -25,7 +96,7 @@ function App() {
             <p className="texto-banner-principal">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
             <div className="box-principal">
               <div className="container-btn">
-                <button className='btn-ativo'> <svg className='icon-corrigir' viewBox="0 0 35 49" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <button  className='btn-ativo'> <svg className='icon-corrigir' viewBox="0 0 35 49" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M34.7402 49.0957C23.1983 49.0957 11.6563 49.0957 0.0957031 49.0957C0.0957031 34.7701 0.0957031 20.4446 0.140555 6.07415C2.57123 6.0293 4.95706 6.0293 7.38058 6.0293C7.38058 4.98441 7.38058 3.98826 7.38058 2.96682C7.49535 2.96682 7.57223 2.96682 7.64911 2.96682C9.40308 2.96681 11.1571 2.96271 12.911 2.97098C13.1916 2.9723 13.326 2.9162 13.4522 2.61102C13.6308 2.17885 13.9298 1.78087 14.2393 1.42159C14.8492 0.713496 15.6847 0.364681 16.5566 0.0957031C17.101 0.0957031 17.6454 0.0957031 18.2464 0.131685C19.7929 0.443985 20.8071 1.33184 21.4176 2.67815C21.5331 2.93301 21.6411 2.96819 21.8557 2.96769C22.7642 2.96557 23.6728 2.9668 24.5814 2.9668C25.5327 2.9668 26.484 2.9668 27.4724 2.9668C27.4724 4.00582 27.4724 5.00174 27.4724 6.03335C29.9083 6.03335 32.3069 6.03335 34.7402 6.03335C34.7402 20.4119 34.7402 34.7538 34.7402 49.0957ZM20.1455 11.7715C15.8938 11.7715 11.642 11.7715 7.35215 11.7715C7.35215 10.7848 7.35215 9.85218 7.35215 8.92837C5.87122 8.92837 4.42877 8.92837 2.99429 8.92837C2.99429 21.3721 2.99429 33.7879 2.99429 46.1974C12.6304 46.1974 22.2391 46.1974 31.8424 46.1974C31.8424 33.7544 31.8424 21.3386 31.8424 8.92744C30.3731 8.92744 28.9307 8.92744 27.4503 8.92744C27.4503 9.88655 27.4503 10.8192 27.4503 11.7715C25.0218 11.7715 22.6315 11.7715 20.1455 11.7715ZM16.7144 3.24414C16.3525 3.48434 16.1006 3.78509 16.0736 4.24897C16.0429 4.77544 15.98 5.30004 15.9277 5.86209C14.0312 5.86209 12.1423 5.86209 10.2714 5.86209C10.2714 6.89603 10.2714 7.89189 10.2714 8.8703C15.0618 8.8703 19.821 8.8703 24.5655 8.8703C24.5655 7.84415 24.5655 6.84834 24.5655 5.8157C22.6464 5.8157 20.7574 5.8157 18.8535 5.8157C18.8535 5.41269 18.8727 5.04611 18.8501 4.68212C18.7658 3.32468 17.8635 2.76209 16.7144 3.24414Z" fill="#42A3B1"/>
                 <path d="M12.848 35.8647C13.3128 36.3225 13.7536 36.7563 14.1882 37.1841C13.5681 37.7963 12.9814 38.3756 12.3961 38.9535C13.0491 39.5857 13.6497 40.1672 14.2146 40.714C13.4215 41.5055 12.7173 42.2084 11.9839 42.9403C11.4521 42.4019 10.864 41.8067 10.2686 41.204C9.65382 41.834 9.07765 42.4243 8.53948 42.9757C7.78931 42.2255 7.08577 41.522 6.34834 40.7845C6.88456 40.2632 7.48449 39.6799 8.08023 39.1007C7.44485 38.4741 6.85763 37.895 6.31152 37.3565C7.06531 36.604 7.76928 35.9012 8.51918 35.1526C9.01928 35.6909 9.58901 36.304 10.1528 36.9108C10.8052 36.2495 11.3841 35.6627 12.1006 34.9365C12.3739 35.2781 12.599 35.5594 12.848 35.8647Z" fill="#42A3B1"/>
                 <path d="M12.6089 17.2983C13.384 16.518 14.1351 15.7615 14.8556 15.0359C15.5817 15.7641 16.2841 16.4686 16.9616 17.148C14.745 19.3642 12.4836 21.6251 10.2558 23.8524C8.98876 22.5856 7.6854 21.2825 6.42334 20.0207C7.06633 19.379 7.77028 18.6766 8.51192 17.9365C9.01338 18.4689 9.58713 19.078 10.1908 19.719C11.0367 18.8722 11.8108 18.0972 12.6089 17.2983Z" fill="#42A3B1"/>
@@ -47,8 +118,8 @@ function App() {
 
               <div className="container-corrigir">
                 <form className='form-corrigir'>
-                  <textarea className='texto-corrigir' placeholder='Insira ou cole aqui a redação a ser avaliada ...'></textarea>
-                  <span className="contagem-corrigir">Palavras: 0     |     Caracteres: 0</span>
+                  <textarea className='texto-corrigir' onChange={Contagem} placeholder='Insira ou cole aqui a redação a ser avaliada ...'></textarea>
+                  <span className="contagem-corrigir">Palavras: {numeroPalavras}     |     Caracteres: {numeroCaracteres}</span>
                   <button className='btn-corrigir'>CORRIGIR</button>
                 </form>
               </div>
@@ -67,7 +138,7 @@ function App() {
 
           <div className="container-como-funciona">
             <p className="texto-como-funciona">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500sLorem Ipsum is simply dummy text of the printing and typesetting industry. </p>
-            <img className='figura1' src={Figura2ComoFunciona} alt="" srcset="" />
+            <img className='figura1' src={Figura2ComoFunciona} alt=""  />
           </div>
         </section>
       </main>
@@ -75,4 +146,4 @@ function App() {
   );
 }
 
-export default App;
+
