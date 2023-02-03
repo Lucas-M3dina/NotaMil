@@ -18,6 +18,20 @@ input, textarea:focus {
   border: none;
 }
 
+textarea::-webkit-scrollbar {
+  width: 7px;               /* width of the entire scrollbar */
+}
+
+textarea::-webkit-scrollbar-track {
+  background: white;        /* color of the tracking area */
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background-color: #42A3B1;    /* color of the scroll thumb */
+  border-radius: 12px;       /* roundness of the scroll thumb */
+  border: 2px solid #42A3B1;  /* creates padding around scroll thumb */
+}
+
 
 /* HEADER */
 
@@ -180,6 +194,7 @@ header{
   color: #353535;
   height: 540px;
   border-bottom: 2px solid #C6C6C6;
+  padding-right: 14px;
 }
 
 .contagem-corrigir{
@@ -213,7 +228,7 @@ header{
 /* SECTION COMO FUNCIONA? */
 
 .section-como-funciona{
-  padding: 580px 0;
+  padding: 80px 0;
 }
 
 .container-como-funciona{
@@ -260,4 +275,48 @@ header{
 
 .texto-como-funciona:first-child{
   color: #FFFFFF;
+}
+
+.sugestoes{
+  padding: 650px 5% 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.titulo-sugestoes{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 35px;
+  text-align: center;
+  letter-spacing: 0.1em;
+  color: #42A3B1;
+}
+
+.carousel-item-next, .carousel-item-prev, .carousel-item.active{
+  width: 100%;
+  display: grid !important;
+  grid-template-columns: 250px 250px 250px;
+  gap: 70px;
+  padding: 30px 180px 80px;
+}
+
+.card-sugestoes{
+  display: flex;
+  flex-direction: column;
+  width: 250px;
+  height: 310px;
+  align-items: center;
+
+  border: 4px solid #42A3B1;
+  border-radius: 10px;
+  padding: 15px 10px;
+  
+}
+
+.img-alert{
+  width: 80px;
+  margin-bottom: 30px;
 }

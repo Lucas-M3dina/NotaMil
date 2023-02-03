@@ -1,18 +1,23 @@
 import React from 'react';
 import {useState, useEffect} from 'react'
+import axios from 'axios'
+import Carousel from 'react-bootstrap/Carousel'
 import './App.css';
 
-import Logo from './assets/logo.png'
-import Figura1ComoFunciona from './assets/figuraComoFunciona.png'
-import Figura2ComoFunciona from './assets/figuraComoFunciona2.png'
+import Logo from './assets/logo.png';
+import Alerta from './assets/alerta.png';
+import Figura1ComoFunciona from './assets/figuraComoFunciona.png';
+import Figura2ComoFunciona from './assets/figuraComoFunciona2.png';
 
 export default function App() {
   const [numeroPalavras, setPalavras] = useState('0');
   const [numeroCaracteres, setCaracteres] = useState('0');
+  const [redacaoCorrigida, setRedacaoCorrigida] = useState({});
+  const [redacao, setRedacao] = useState('')
 
 
-  /* FUNÇÃO RESPONSAVEL PELA CONTAGEM E PALAVRAS E CARACTERES INSERIDOS */
-  function Contagem(){
+  /* FUNÇÃO RESPONSAVEL PELA contagem E PALAVRAS E CARACTERES INSERIDOS */
+  function contagem(){
     const texto = document.getElementsByClassName("texto-corrigir")[0].value;
     var caracteres = 0 ;
     var palavras = texto.split(" ");
@@ -33,7 +38,7 @@ export default function App() {
 
   /*  FUNÇÃO RESPONSAVEL POR TROCAR TAB DE CORRIGIR REDAÇÃO PARA GERAR REDAÇÃO E VICE E VERSA  */
 
-  function TrocarTab(){
+  function trocarTab(){
     const btnTroca = document.querySelectorAll(".container-btn button");
     const vetorGerar = document.querySelectorAll(".icon-gerar path");
     const vetorAvaliar = document.querySelectorAll(".icon-corrigir path");
@@ -64,7 +69,6 @@ export default function App() {
     }
 
     btnTroca.forEach((btn, index) => {
-      console.log("testeeeeeee");
       btn.addEventListener('click', () => {
         activeTab(index);
       });
@@ -72,9 +76,73 @@ export default function App() {
   }
   
   useEffect(() => {
-    TrocarTab()
+    trocarTab()
   });
 
+  // FUNÇÃO PARA CONSUMIR API CIRA
+  async function consumirCIRA(e){
+    e.preventDefault()
+    
+    
+    if (redacao !== "") {
+      console.log('TA DENTRO DO IF');
+    
+      axios.get('http://143.107.183.175:15680/score_essay?text=' + redacao)
+      .then((resp) => {
+        console.log(resp.data);
+        setRedacaoCorrigida(resp.data);
+      })
+      .catch((erro) => {
+        console.log("Deu ruim na requisição");
+      })
+    }
+    
+    console.log(redacaoCorrigida);
+    
+    
+  }
+
+  /* function modelarArrayCIRA(){
+    const arrayCorrecoes = [];
+    const redacaocorrecao = consumirCIRA();
+    var loop = 0;
+    var objCorrecao = {
+      message1: "",
+      message2: "",
+      message3: ""
+    }
+    console.log(redacaocorrecao);
+
+
+    if (Object.keys(redacaocorrecao).length !== 0  ) {
+      if (Object.keys(redacaocorrecao.detected_mistakes).length > 3){
+        redacaocorrecao.detected_mistakes.forEach((sugestao) => {
+          if (loop === 3) {
+            objCorrecao.message1 = "";
+            objCorrecao.message2 = "";
+            objCorrecao.message3 = "";
+            arrayCorrecoes.push(objCorrecao);
+            loop = 0
+          }else if (objCorrecao.message1 === "") {
+            objCorrecao.message1 = sugestao.message;
+          } else if (objCorrecao.message2 === "") {
+            objCorrecao.message2 = sugestao.message;
+          }else if (objCorrecao.message3 === "") {
+            objCorrecao.message3 = sugestao.message;
+          }
+          
+          loop++
+        })
+        return console.log(arrayCorrecoes)
+      }else {
+        return console.log(redacaocorrecao.detected_mistakes)
+      }
+
+    }
+    return "State ta vazio";
+  } */
+  
+  
   
 
   return (
@@ -117,14 +185,39 @@ export default function App() {
               </div>
 
               <div className="container-corrigir">
-                <form className='form-corrigir'>
-                  <textarea className='texto-corrigir' onChange={Contagem} placeholder='Insira ou cole aqui a redação a ser avaliada ...'></textarea>
+                <form className='form-corrigir' onSubmit={(e) => {consumirCIRA(e)}}>
+                  <textarea id='redacaoCorrigir' className='texto-corrigir' onChange={(e) => {
+                    contagem()
+                    setRedacao(e.target.value)
+                    }} placeholder='Insira ou cole aqui a redação a ser avaliada ...'></textarea>
                   <span className="contagem-corrigir">Palavras: {numeroPalavras}     |     Caracteres: {numeroCaracteres}</span>
-                  <button className='btn-corrigir'>CORRIGIR</button>
+                  <button type='submit' id='btn-corrigir' className='btn-corrigir'>CORRIGIR</button>
                 </form>
               </div>
             </div>
           </div>
+        </section>
+
+        <section className="sugestoes">
+          <h1 className="titulo-sugestoes">CORREÇÕES</h1>
+          <Carousel variant="dark" className="container-cards">
+            <Carousel.Item>
+              <div className="card-sugestoes">
+                <img className='img-alert' src={Alerta} alt=" Alerta"/>
+                <span className="texto-card-sugestoes">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's </span>
+              </div>
+
+              <div className="card-sugestoes">
+                <img className='img-alert' src={Alerta} alt=" Alerta"/>
+                <span className="texto-card-sugestoes">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's </span>
+              </div>
+
+              <div className="card-sugestoes">
+                <img className='img-alert' src={Alerta} alt=" Alerta"/>
+                <span className="texto-card-sugestoes">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's </span>
+              </div>
+            </Carousel.Item>
+          </Carousel>
         </section>
 
         <section className="section-como-funciona">
