@@ -1,19 +1,24 @@
 import React from 'react';
 import {useState, useEffect} from 'react'
 import axios from 'axios'
-import Carousel from 'react-bootstrap/Carousel'
+import '@lottiefiles/lottie-player';
 import './App.css';
 
 import Logo from './assets/logo.png';
 import Alerta from './assets/alerta.png';
 import Figura1ComoFunciona from './assets/figuraComoFunciona.png';
 import Figura2ComoFunciona from './assets/figuraComoFunciona2.png';
+import Figura3ComoFunciona from './assets/figuraRobo.png';
 
 export default function App() {
   const [numeroPalavras, setPalavras] = useState('0');
   const [numeroCaracteres, setCaracteres] = useState('0');
   const [redacaoCorrigida, setRedacaoCorrigida] = useState({});
-  const [redacao, setRedacao] = useState('')
+  const [redacao, setRedacao] = useState('');
+  const [redacaoGerada, setRedacaoGerada] = useState('');
+  const [tema, setTema] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [mensagemErro, setMensagemErro] = useState('Algo deu errado');
 
 
   /* FUNÇÃO RESPONSAVEL PELA contagem E PALAVRAS E CARACTERES INSERIDOS */
@@ -37,11 +42,12 @@ export default function App() {
 
 
   /*  FUNÇÃO RESPONSAVEL POR TROCAR TAB DE CORRIGIR REDAÇÃO PARA GERAR REDAÇÃO E VICE E VERSA  */
-
   function trocarTab(){
     const btnTroca = document.querySelectorAll(".container-btn button");
     const vetorGerar = document.querySelectorAll(".icon-gerar path");
     const vetorAvaliar = document.querySelectorAll(".icon-corrigir path");
+    const containerGerar = document.querySelector('.container-gerar');
+    const containerCorrigir = document.querySelector('.container-corrigir');
 
     const activeTab = (index) => {
       
@@ -52,17 +58,21 @@ export default function App() {
       if (index === 0) {
         vetorGerar.forEach((content) => {
           content.style.fill = '#353535'
-        })
+        });
         vetorAvaliar.forEach((content) => {
           content.style.fill = '#42A3B1'
-        })
+        });
+        containerGerar.style.display = 'none';
+        containerCorrigir.style.display = 'flex';
       } else if (index === 1){
         vetorGerar.forEach((content) => {
           content.style.fill = '#42A3B1'
-        })
+        });
         vetorAvaliar.forEach((content) => {
           content.style.fill = '#353535'
-        })
+        });
+        containerGerar.style.display = 'flex';
+        containerCorrigir.style.display = 'none';
       }
 
       btnTroca[index].classList.replace('btn-desligado', 'btn-ativo');
@@ -83,65 +93,133 @@ export default function App() {
   async function consumirCIRA(e){
     e.preventDefault()
     
-    
-    if (redacao !== "") {
-      console.log('TA DENTRO DO IF');
-    
-      axios.get('http://143.107.183.175:15680/score_essay?text=' + redacao)
+    var erro = redacao.split('%').length; 
+
+    if (numeroPalavras > 300 && erro === 1) {
+       await axios.get('http://143.107.183.175:15680/score_essay?text=' + redacao)
       .then((resp) => {
-        console.log(resp.data);
-        setRedacaoCorrigida(resp.data);
+        setRedacaoCorrigida(resp.data); 
+        if(resp.status === 200){
+          
+          mostrarPontuacao();
+        }
       })
       .catch((erro) => {
-        console.log("Deu ruim na requisição");
+        setMensagemErro('Esse serviço depende de servidores de terceiros e houve um erro na comunicação')
+        mostrarErro()
       })
+    } else{
+      setMensagemErro('Algo deu errado! Verifique se sua redação possui ao menos 300 palavras e se ela possui simbolos não suportados ( % )')
+      mostrarErro()
     }
-    
-    console.log(redacaoCorrigida);
     
     
   }
 
-  /* function modelarArrayCIRA(){
-    const arrayCorrecoes = [];
-    const redacaocorrecao = consumirCIRA();
-    var loop = 0;
-    var objCorrecao = {
-      message1: "",
-      message2: "",
-      message3: ""
+  // FUNÇÃO PARA CONSUMIR API CHATGPT
+  async function consumirGPT(e){
+    e.preventDefault()
+    
+    var erro = tema.split('%').length;
+
+    if (tema !== "" && erro === 1) {
+      setLoading(true);
+      await axios.post('https://api.openai.com/v1/completions',{
+        model: "text-davinci-003",
+        prompt: "faça uma redação do gênero dissertativo-argumentativo sobre" + tema + " considerando que é de extrema importancia a redação conter no minimo 430 palavras e que tenha somente 4 parágrafos contendo introdução, desenvolvimento e conclusão. tente também fazer citações relevantes ao tema e não se esqueça que é de extrema importância o texto estar em terceira pessoa",
+        max_tokens: 3000
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer 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'
+        }
+      })
+      .then((resp) => {
+        if (resp.status === 200){
+          setRedacaoGerada(resp.data.choices[0].text);
+          setLoading(false);
+        }
+      })
+      .catch((erro) => {
+        setLoading(false);
+        setMensagemErro('Esse serviço depende da disponibilidade da I.A ChatGPT e houve um erro na comunicação com a tecnologia')
+        mostrarErro()
+        
+      })
+    }  else{
+      setMensagemErro('Algo deu errado! Verifique se escreveu um tema ou possui simbolos')
+      mostrarErro()
     }
-    console.log(redacaocorrecao);
+  }
 
+  //FUNÇÃO RESPONSAVEL POR MUDAR A COR DA PONTUACAO TIRADA
+  function alterarCorPontuacao(){
+    const contorno = document.querySelector('.contorno-pontuacao')
+    const valor = document.querySelector('.valor-pontuacao')
+    console.log(redacaoCorrigida.score)
+    if(redacaoCorrigida.score < 700){
+      contorno.style.background = 'linear-gradient(#EC3F3F, #FFED92)';
+      valor.style.color = '#EC3F3F';
+    }else{
+      contorno.style.background = 'linear-gradient(#95EC76, #FFED92)';
+      valor.style.color = '#95EC76';
+    }
+  }
 
-    if (Object.keys(redacaocorrecao).length !== 0  ) {
-      if (Object.keys(redacaocorrecao.detected_mistakes).length > 3){
-        redacaocorrecao.detected_mistakes.forEach((sugestao) => {
-          if (loop === 3) {
-            objCorrecao.message1 = "";
-            objCorrecao.message2 = "";
-            objCorrecao.message3 = "";
-            arrayCorrecoes.push(objCorrecao);
-            loop = 0
-          }else if (objCorrecao.message1 === "") {
-            objCorrecao.message1 = sugestao.message;
-          } else if (objCorrecao.message2 === "") {
-            objCorrecao.message2 = sugestao.message;
-          }else if (objCorrecao.message3 === "") {
-            objCorrecao.message3 = sugestao.message;
-          }
-          
-          loop++
-        })
-        return console.log(arrayCorrecoes)
-      }else {
-        return console.log(redacaocorrecao.detected_mistakes)
+  useEffect(() => {
+    alterarCorPontuacao();
+  })
+
+  // FUNÇÃO PARA MOSTRAR PONTUAÇÃO TIRADA NA REDAÇÃO 
+  function mostrarPontuacao(){
+    
+    const divPontuacao = document.querySelector('.pontuacao');
+    divPontuacao.classList.toggle('mostrar-pontuacao');
+  }
+
+  // Função para tela de loading
+  function preparandoLoading(){
+    const containerLoad = document.querySelector('.container-load');
+
+    if(loading){
+      containerLoad.style.display = 'flex';
+    }else if (!loading){
+      containerLoad.style.display = 'none';
+    }
+  }
+
+  useEffect(() => {
+    preparandoLoading()
+  })
+
+  // FUNÇÃO PARA ANIMAR AO SCROLL
+  function animarScroll(){
+    const sections = document.querySelectorAll('.animaScroll');
+
+    sections.forEach((section) => {
+      const sectionTop = section.getBoundingClientRect().top - (window.innerHeight * 0.6)
+      if(sectionTop < 0){
+        section.classList.add('scrollON')
       }
+    })
+  }
 
-    }
-    return "State ta vazio";
-  } */
+  useEffect(() =>{
+    window.addEventListener('scroll', animarScroll);
+  })
+
+  // FUNÇÃO PARA MOSTRAR MENSAGEM DE ERRO
+  function mostrarErro(){
+    
+    const divErro = document.querySelector('.erro');
+    divErro.classList.toggle('mostrar-erro');
+  }
+    
+
+
   
+  
+
   
   
 
@@ -153,7 +231,9 @@ export default function App() {
           <nav className="container-links-header">
             <span className="link-header">Sobre mim</span>
             <span className="link-header">Como funciona?</span>
-            <span className="link-header">Comece ja</span>
+            <span onClick={() => {
+              mostrarErro()
+            }} className="link-header">Comece ja</span>
           </nav>
         </div>
       </header>
@@ -161,7 +241,7 @@ export default function App() {
       <main>
         <section className="banner-principal">
           <div className="container-banner-principal">
-            <p className="texto-banner-principal">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s</p>
+            <p className="texto-banner-principal">Bem-vindo ao nosso site! Estamos entusiasmados em lhe apresentar nossa ferramenta de avaliação e geração de redações.</p>
             <div className="box-principal">
               <div className="container-btn">
                 <button  className='btn-ativo'> <svg className='icon-corrigir' viewBox="0 0 35 49" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -184,57 +264,87 @@ export default function App() {
                 Gerar Redação</button>
               </div>
 
+              <div className="container-gerar">
+                <form onSubmit={(e) => { consumirGPT(e) }} className="form-gerar">
+                  <input type="text" placeholder="Insira o tema da redação que deseja" className="input-gerar" onChange={(e) => {
+                    setTema(e.target.value)
+                  }} value={tema} />
+                  <button type='submit' className='btn-gerar'>GERAR</button>
+
+                </form>
+
+                <textarea className='texto-gerar' value={redacaoGerada} disabled></textarea>
+              </div>
+              
+
               <div className="container-corrigir">
                 <form className='form-corrigir' onSubmit={(e) => {consumirCIRA(e)}}>
                   <textarea id='redacaoCorrigir' className='texto-corrigir' onChange={(e) => {
                     contagem()
                     setRedacao(e.target.value)
-                    }} placeholder='Insira ou cole aqui a redação a ser avaliada ...'></textarea>
+                    }} value={redacao} placeholder='Insira ou cole aqui a redação a ser avaliada ...'></textarea>
                   <span className="contagem-corrigir">Palavras: {numeroPalavras}     |     Caracteres: {numeroCaracteres}</span>
                   <button type='submit' id='btn-corrigir' className='btn-corrigir'>CORRIGIR</button>
                 </form>
+                <div className="pontuacao">
+                  <div className="container-pontuacao">
+                    <p className="texto-pontuacao">Sua redação foi avaliada em:</p>
+                    <div className="contorno-pontuacao">
+                      <div className="contorno-pontuacao2">
+                        <span className='valor-pontuacao'>{redacaoCorrigida.score}</span>
+                      </div>
+                    </div>
+                    <button className='btn-pontuacao' onClick={() => { mostrarPontuacao() }} type='button'>FECHAR</button>
+                  </div>
+                </div>
+
+                
               </div>
+              <div className="container-load">
+                  {loading && <lottie-player
+                  src="https://assets7.lottiefiles.com/packages/lf20_dkz94xcg.json"
+                  autoplay
+                  loop
+                  id='load'
+                  />}
+                </div>
+
+                <div className="erro">
+                    <div className="container-erro">
+                      <img src={Alerta} className='alerta' alt="Imagem de erro" />
+                      <span className='texto-erro'>{mensagemErro}</span>
+                      <button className='btn-pontuacao' onClick={() => { mostrarErro() }} type='button'>FECHAR</button>
+                    </div>
+                </div>
             </div>
           </div>
         </section>
 
-        <section className="sugestoes">
-          <h1 className="titulo-sugestoes">CORREÇÕES</h1>
-          <Carousel variant="dark" className="container-cards">
-            <Carousel.Item>
-              <div className="card-sugestoes">
-                <img className='img-alert' src={Alerta} alt=" Alerta"/>
-                <span className="texto-card-sugestoes">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's </span>
-              </div>
-
-              <div className="card-sugestoes">
-                <img className='img-alert' src={Alerta} alt=" Alerta"/>
-                <span className="texto-card-sugestoes">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's </span>
-              </div>
-
-              <div className="card-sugestoes">
-                <img className='img-alert' src={Alerta} alt=" Alerta"/>
-                <span className="texto-card-sugestoes">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's </span>
-              </div>
-            </Carousel.Item>
-          </Carousel>
-        </section>
+        
 
         <section className="section-como-funciona">
-          <div className="container-como-funciona">
+          <div className="container-como-funciona animaScroll">
             <img className='figura1' src={Figura1ComoFunciona} alt="Figura lendo livro"/>
             <div className="textos-como-funciona">
               <h1 className="titulo-como-funciona">COMO FUNCIONA?</h1>
-              <p className="texto-como-funciona">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500sLorem Ipsum is simply dummy text of the printing and typesetting industry. </p>
+              <p className="texto-como-funciona">A nossa plataforma de avaliação de redações usa a tecnologia da CIRA para fornecer análises precisas e eficientes de seus textos. Com apenas alguns cliques, você pode enviar sua redação e receber uma avaliação de 0 a 1000 em questão de segundos.</p>
             </div>
           </div>
 
-          <div className="container-como-funciona">
-            <p className="texto-como-funciona">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500sLorem Ipsum is simply dummy text of the printing and typesetting industry. </p>
-            <img className='figura1' src={Figura2ComoFunciona} alt=""  />
+          <div className="container-como-funciona animaScroll">
+            <p className="texto-como-funciona">A inteligência artificial avalia sua redação em vários aspectos, incluindo clareza, concisão, coesão, coerencia e uso correto da gramática e vocabulário.</p>
+            <img className='figura1' src={Figura2ComoFunciona} alt="Figura abrindo um livro"  />
+          </div>
+
+          <div className="container-como-funciona animaScroll">
+            <img className='figura1' src={Figura3ComoFunciona} alt="Figura com robo"  />
+            <p className="texto-como-funciona">A plataforma usa a inteligência artificial ChatGPT para gerar redações em questão de minutos. Basta fornecer o tema e a tecnologia fará o resto. Você pode ter certeza de que a I.A fará o máximo sua redação será efetiva e impactante</p>
           </div>
         </section>
       </main>
+      <footer>
+        <span>Todos os direitos reservados a <span>Lucas Medina</span></span>
+      </footer>
     </>
   );
 }

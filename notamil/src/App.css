@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap');
 
+:root {
+  --larguraBoxPrincipal: 800px;
+}
+
 *{
   box-sizing: border-box;
   margin: 0;
@@ -111,8 +115,8 @@ header{
 }
 
 .box-principal{
-  width: 800px;
-  height: 800px;
+  width: var(--larguraBoxPrincipal);
+  height: var(--larguraBoxPrincipal);
   background: #FFFFFF;
   box-shadow: 0px 10px 24px rgb(0 0 0 / 36%);
   border-radius: 7px;
@@ -174,6 +178,9 @@ header{
   display: flex;
   justify-content: center;
   align-items: center;
+
+  animation-name: AlterarTab;
+  animation-duration: 1s;
 }
 
 .form-corrigir{
@@ -228,7 +235,7 @@ header{
 /* SECTION COMO FUNCIONA? */
 
 .section-como-funciona{
-  padding: 80px 0;
+  padding: 650px 0 80px;
 }
 
 .container-como-funciona{
@@ -236,13 +243,11 @@ header{
   justify-content: space-between;
   padding: 0 5% ;
   align-items: center;
-  margin-top: 150px;
+  margin: 150px auto;
+  max-width: 1600px;
 }
 
-.container-como-funciona:last-child{
-  background-color: #211f1f;
-  padding: 100px 5%;
-}
+
 
 .figura1{
   width: 500px;
@@ -273,50 +278,251 @@ header{
   max-width: 500px;
 }
 
-.texto-como-funciona:first-child{
-  color: #FFFFFF;
+.escondido{
+  display: none;
 }
 
-.sugestoes{
-  padding: 650px 5% 0;
-  display: flex;
-  justify-content: center;
+.pontuacao{
+  position: absolute;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 7px;
+  width: var(--larguraBoxPrincipal);
+  height: var(--larguraBoxPrincipal);
+  margin-bottom: 45px;
+  display: none;
   align-items: center;
-  flex-direction: column;
+  justify-content: center;
 }
 
-.titulo-sugestoes{
+.container-pontuacao{
+  background: #FFFFFF;
+  border-radius: 7px;
+  width: 70%;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px;
+}
+
+.texto-pontuacao{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 25px;
+  color: #42A3B1;
+}
+
+.contorno-pontuacao{
+  width: 150px;
+  height: 150px;
+  border-radius: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 30px 0;
+}
+.contorno-pontuacao2{
+  background-color: #FFFFFF;
+  width: 125px;
+  height: 125px;
+  border-radius: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.valor-pontuacao{
   font-family: 'Poppins';
   font-style: normal;
   font-weight: 700;
   font-size: 35px;
-  text-align: center;
-  letter-spacing: 0.1em;
-  color: #42A3B1;
+  line-height: 68px;
+  color: green;
 }
 
-.carousel-item-next, .carousel-item-prev, .carousel-item.active{
+.btn-pontuacao{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  color: #FFFFFF;
+  background: #42A3B1;
+  border-radius: 2px;
+  padding: 7px 22px;
+  cursor: pointer;
+}
+
+.mostrar-pontuacao{
+  display: flex !important;
+  animation-name: mostrar;
+  animation-duration: 1s;
+}
+
+.container-gerar{
+  display: none;
   width: 100%;
-  display: grid !important;
-  grid-template-columns: 250px 250px 250px;
-  gap: 70px;
-  padding: 30px 180px 80px;
-}
-
-.card-sugestoes{
-  display: flex;
   flex-direction: column;
-  width: 250px;
-  height: 310px;
   align-items: center;
 
-  border: 4px solid #42A3B1;
-  border-radius: 10px;
-  padding: 15px 10px;
-  
+  animation-name: AlterarTab;
+  animation-duration: 1s;
 }
 
-.img-alert{
+.form-gerar{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 0 40px;
+  flex-direction: column;
+}
+
+.input-gerar{
+  width: 80%;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  color: #353535;
+  border-bottom: 2px solid #C6C6C6;
+  padding-right: 14px;
+}
+
+.btn-gerar{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 19px;
+  color: #FFFFFF;
+  background: #42B189;
+  border-radius: 2px;
+  padding: 10px 30px;
+  margin-top: 30px;
+}
+
+.btn-gerar:hover{
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.texto-gerar{
+  width: 80%;
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18px;
+  color: #353535;
+  height: 450px;
+  padding-right: 14px;
+}
+
+#load{
+  width: 593px;
+  /* height: 175px; */
+  position: absolute;
+}
+
+.container-box-principal{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+}
+
+.container-load{
+  position: absolute;
+  background: #ffff;
+  border-radius: 7px;
+  width: var(--larguraBoxPrincipal);
+  height: var(--larguraBoxPrincipal);
+  margin-bottom: 45px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+}
+
+.animaScroll{
+  opacity: 0;
+  transition: 2s;
+  transform: translate3d(-30px, 0, 0);
+}
+
+.animaScroll.scrollON{
+  opacity: 1;
+  transition: 2s;
+  transform: translate3d(0, 0, 0);
+}
+
+
+.erro{
+  position: absolute;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 7px;
+  width: var(--larguraBoxPrincipal);
+  height: var(--larguraBoxPrincipal);
+  margin-top: -20px;  
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.container-erro{
+  background: #FFFFFF;
+  border-radius: 7px;
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 40px;
+}
+
+.texto-erro{
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 25px;
+  color: #42A3B1;
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.mostrar-erro{
+  display: flex !important;
+  animation-name: mostrar;
+  animation-duration: 1s;
+}
+
+.alerta{
   width: 80px;
   margin-bottom: 30px;
 }
+
+
+
+/* ANIMACOES */
+
+@keyframes mostrar {
+  from{
+    opacity: 0;
+    transform: translate3d(0, -30px, 0);
+  }
+  to{
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes AlterarTab {
+  from{
+    opacity: 0;
+    transform: translate3d(-30px, 0, 0);
+  }
+  to{
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
