@@ -1,4 +1,5 @@
-import React from 'react';
+import * as React from "react";
+import { Link } from "react-router-dom";
 import {useState, useEffect} from 'react'
 import axios from 'axios'
 import '@lottiefiles/lottie-player';
@@ -9,6 +10,7 @@ import Alerta from './assets/alerta.png';
 import Figura1ComoFunciona from './assets/figuraComoFunciona.png';
 import Figura2ComoFunciona from './assets/figuraComoFunciona2.png';
 import Figura3ComoFunciona from './assets/figuraRobo.png';
+import Bars from './assets/bars.png'
 
 export default function App() {
   const [numeroPalavras, setPalavras] = useState('0');
@@ -21,7 +23,7 @@ export default function App() {
   const [mensagemErro, setMensagemErro] = useState('Algo deu errado');
 
 
-  /* FUNÇÃO RESPONSAVEL PELA contagem E PALAVRAS E CARACTERES INSERIDOS */
+  /* FUNÇÃO RESPONSAVEL PELA CONTAGEM DE PALAVRAS E CARACTERES INSERIDOS */
   function contagem(){
     const texto = document.getElementsByClassName("texto-corrigir")[0].value;
     var caracteres = 0 ;
@@ -200,6 +202,8 @@ export default function App() {
       const sectionTop = section.getBoundingClientRect().top - (window.innerHeight * 0.6)
       if(sectionTop < 0){
         section.classList.add('scrollON')
+      }else{
+        section.classList.remove('scrollON')
       }
     })
   }
@@ -214,9 +218,29 @@ export default function App() {
     const divErro = document.querySelector('.erro');
     divErro.classList.toggle('mostrar-erro');
   }
+
+  //FUNCÃO PARA ANIMAÇÃO DE SCROLL SUAVE
     
+  function ScrollSuave(e){
+    e.preventDefault();
 
+    const hrefBruto = e.currentTarget.getAttribute('href');
+    const href = hrefBruto.split('/')[1];
 
+    const section = document.querySelector(href);
+
+    section.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }
+
+  // FUNÇÃO PARA MOSTRAR MENU DE HAMBURGUER
+  function mostrarMenu(){
+    
+    const menu = document.querySelector('.container-links-header');
+    menu.classList.toggle('mostrar-erro');
+  }
   
   
 
@@ -229,12 +253,11 @@ export default function App() {
         <div className="container-header">
           <img src={Logo} alt="Logo" className="logo" />
           <nav className="container-links-header">
-            <span className="link-header">Sobre mim</span>
-            <span className="link-header">Como funciona?</span>
-            <span onClick={() => {
-              mostrarErro()
-            }} className="link-header">Comece ja</span>
+            <Link to='https://lucasmedina.vercel.app' target="_blank" className="link-header">Sobre mim</Link>
+            <Link to='#jsComoFunciona' onClick={(e) => {ScrollSuave(e)}} className="link-header">Como funciona?</Link>
+            <Link to='#jsBoxPrincipal' onClick={(e) => {ScrollSuave(e)}} className="link-header">Comece ja</Link>
           </nav>
+          <img className="logo-menu" src={Bars} alt="Menu hamburguer" onClick={() => {mostrarMenu()}} />
         </div>
       </header>
 
@@ -242,7 +265,7 @@ export default function App() {
         <section className="banner-principal">
           <div className="container-banner-principal">
             <p className="texto-banner-principal">Bem-vindo ao nosso site! Estamos entusiasmados em lhe apresentar nossa ferramenta de avaliação e geração de redações.</p>
-            <div className="box-principal">
+            <div className="box-principal" id="jsBoxPrincipal">
               <div className="container-btn">
                 <button  className='btn-ativo'> <svg className='icon-corrigir' viewBox="0 0 35 49" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M34.7402 49.0957C23.1983 49.0957 11.6563 49.0957 0.0957031 49.0957C0.0957031 34.7701 0.0957031 20.4446 0.140555 6.07415C2.57123 6.0293 4.95706 6.0293 7.38058 6.0293C7.38058 4.98441 7.38058 3.98826 7.38058 2.96682C7.49535 2.96682 7.57223 2.96682 7.64911 2.96682C9.40308 2.96681 11.1571 2.96271 12.911 2.97098C13.1916 2.9723 13.326 2.9162 13.4522 2.61102C13.6308 2.17885 13.9298 1.78087 14.2393 1.42159C14.8492 0.713496 15.6847 0.364681 16.5566 0.0957031C17.101 0.0957031 17.6454 0.0957031 18.2464 0.131685C19.7929 0.443985 20.8071 1.33184 21.4176 2.67815C21.5331 2.93301 21.6411 2.96819 21.8557 2.96769C22.7642 2.96557 23.6728 2.9668 24.5814 2.9668C25.5327 2.9668 26.484 2.9668 27.4724 2.9668C27.4724 4.00582 27.4724 5.00174 27.4724 6.03335C29.9083 6.03335 32.3069 6.03335 34.7402 6.03335C34.7402 20.4119 34.7402 34.7538 34.7402 49.0957ZM20.1455 11.7715C15.8938 11.7715 11.642 11.7715 7.35215 11.7715C7.35215 10.7848 7.35215 9.85218 7.35215 8.92837C5.87122 8.92837 4.42877 8.92837 2.99429 8.92837C2.99429 21.3721 2.99429 33.7879 2.99429 46.1974C12.6304 46.1974 22.2391 46.1974 31.8424 46.1974C31.8424 33.7544 31.8424 21.3386 31.8424 8.92744C30.3731 8.92744 28.9307 8.92744 27.4503 8.92744C27.4503 9.88655 27.4503 10.8192 27.4503 11.7715C25.0218 11.7715 22.6315 11.7715 20.1455 11.7715ZM16.7144 3.24414C16.3525 3.48434 16.1006 3.78509 16.0736 4.24897C16.0429 4.77544 15.98 5.30004 15.9277 5.86209C14.0312 5.86209 12.1423 5.86209 10.2714 5.86209C10.2714 6.89603 10.2714 7.89189 10.2714 8.8703C15.0618 8.8703 19.821 8.8703 24.5655 8.8703C24.5655 7.84415 24.5655 6.84834 24.5655 5.8157C22.6464 5.8157 20.7574 5.8157 18.8535 5.8157C18.8535 5.41269 18.8727 5.04611 18.8501 4.68212C18.7658 3.32468 17.8635 2.76209 16.7144 3.24414Z" fill="#42A3B1"/>
@@ -322,12 +345,12 @@ export default function App() {
 
         
 
-        <section className="section-como-funciona">
-          <div className="container-como-funciona animaScroll">
+        <section  className="section-como-funciona">
+          <div className="container-como-funciona animaScroll" id="jsComoFunciona">
             <img className='figura1' src={Figura1ComoFunciona} alt="Figura lendo livro"/>
             <div className="textos-como-funciona">
               <h1 className="titulo-como-funciona">COMO FUNCIONA?</h1>
-              <p className="texto-como-funciona">A nossa plataforma de avaliação de redações usa a tecnologia da CIRA para fornecer análises precisas e eficientes de seus textos. Com apenas alguns cliques, você pode enviar sua redação e receber uma avaliação de 0 a 1000 em questão de segundos.</p>
+              <p className="texto-como-funciona full-size">A nossa plataforma de avaliação de redações usa a tecnologia da CIRA para fornecer análises precisas e eficientes de seus textos. Com apenas alguns cliques, você pode enviar sua redação e receber uma avaliação de 0 a 1000 em questão de segundos.</p>
             </div>
           </div>
 
@@ -343,7 +366,7 @@ export default function App() {
         </section>
       </main>
       <footer>
-        <span>Todos os direitos reservados a <span>Lucas Medina</span></span>
+        <span className="texto-footer">Todos os direitos reservados</span>
       </footer>
     </>
   );
