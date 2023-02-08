@@ -97,7 +97,7 @@ export default function App() {
     
     var erro = redacao.split('%').length; 
 
-    if (numeroPalavras > 300 && erro === 1) {
+    if (numeroPalavras >= 300 && erro === 1) {
        await axios.get('http://143.107.183.175:15680/score_essay?text=' + redacao)
       .then((resp) => {
         setRedacaoCorrigida(resp.data); 
