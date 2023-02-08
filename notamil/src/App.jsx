@@ -98,15 +98,18 @@ export default function App() {
     var erro = redacao.split('%').length; 
 
     if (numeroPalavras >= 300 && erro === 1) {
-       await axios.get('https://notamil-api.onrender.com/cira/' + redacao)
+      setLoading(true);
+      await axios.get('https://notamil-api.onrender.com/cira/' + redacao)
       .then((resp) => {
         setRedacaoCorrigida(resp.data); 
         if(resp.status === 200){
+          setLoading(false);
           mostrarPontuacao();
         }
       })
       .catch((erro) => {
         setMensagemErro('Esse serviço depende da disponibilidade da I.A CIRA e houve um erro na comunicação com a tecnologia')
+        setLoading(false);
         mostrarErro()
       })
     } else{
