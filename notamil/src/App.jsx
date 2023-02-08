@@ -133,7 +133,7 @@ export default function App() {
       }, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer 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'
+          'Authorization': 'Bearer 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'
         }
       })
       .then((resp) => {
