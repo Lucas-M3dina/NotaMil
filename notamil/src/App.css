@@ -88,7 +88,7 @@ header{
 /* PRIMEIRA SECTION */
 
 .banner-principal{
-  background-image: url('./assets/Fundo-BannerPrincipal.png');
+  background-image: url('./assets/Fundo-BannerPrincipal.webp');
   height: 500px;
   background-repeat: no-repeat;
   background-size: cover;
@@ -602,6 +602,11 @@ footer{
 }
 
 @media (max-width:830px){
+  .texto-gerar {
+    font-size: 15px;
+    height: 200px;
+  }
+
   .banner-principal {
     padding: 0 5%;
   }
@@ -656,6 +661,11 @@ footer{
 @media (max-width:530px){
   .box-principal{
     box-shadow: 0px 3px 14px rgb(0 0 0 / 36%);
+  }
+
+  .texto-gerar {
+    font-size: 15px;
+    height: 200px;
   }
 
   .container-como-funciona {

@@ -1,16 +1,16 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import {useState, useEffect} from 'react'
-import axios from 'axios'
+import axios from 'axios';
 import '@lottiefiles/lottie-player';
 import './App.css';
 
-import Logo from './assets/logo.png';
-import Alerta from './assets/alerta.png';
-import Figura1ComoFunciona from './assets/figuraComoFunciona.png';
-import Figura2ComoFunciona from './assets/figuraComoFunciona2.png';
-import Figura3ComoFunciona from './assets/figuraRobo.png';
-import Bars from './assets/bars.png'
+import Logo from './assets/logo.webp';
+import Alerta from './assets/alerta.webp';
+import Figura1ComoFunciona from './assets/figuraComoFunciona.webp';
+import Figura2ComoFunciona from './assets/figuraComoFunciona2.webp';
+import Figura3ComoFunciona from './assets/figuraRobo.webp';
+import Bars from './assets/bars.webp';
 
 export default function App() {
   const [numeroPalavras, setPalavras] = useState('0');
@@ -89,7 +89,7 @@ export default function App() {
   
   useEffect(() => {
     trocarTab()
-  });
+  }, []);
 
   // FUNÇÃO PARA CONSUMIR API CIRA
   async function consumirCIRA(e){
@@ -107,7 +107,7 @@ export default function App() {
         }
       })
       .catch((erro) => {
-        setMensagemErro('Esse serviço depende de servidores de terceiros e houve um erro na comunicação')
+        setMensagemErro('Esse serviço depende da disponibilidade da I.A CIRA e houve um erro na comunicação com a tecnologia')
         mostrarErro()
       })
     } else{
@@ -158,7 +158,6 @@ export default function App() {
   function alterarCorPontuacao(){
     const contorno = document.querySelector('.contorno-pontuacao')
     const valor = document.querySelector('.valor-pontuacao')
-    console.log(redacaoCorrigida.score)
     if(redacaoCorrigida.score < 700){
       contorno.style.background = 'linear-gradient(#EC3F3F, #FFED92)';
       valor.style.color = '#EC3F3F';
@@ -210,7 +209,7 @@ export default function App() {
 
   useEffect(() =>{
     window.addEventListener('scroll', animarScroll);
-  })
+  },[])
 
   // FUNÇÃO PARA MOSTRAR MENSAGEM DE ERRO
   function mostrarErro(){
@@ -305,7 +304,7 @@ export default function App() {
                   <textarea id='redacaoCorrigir' className='texto-corrigir' onChange={(e) => {
                     contagem()
                     setRedacao(e.target.value)
-                    }} value={redacao} placeholder='Insira ou cole aqui a redação a ser avaliada ...'></textarea>
+                    }} value={redacao} placeholder='Insira ou cole aqui a redação a ser avaliada'></textarea>
                   <span className="contagem-corrigir">Palavras: {numeroPalavras}     |     Caracteres: {numeroCaracteres}</span>
                   <button type='submit' id='btn-corrigir' className='btn-corrigir'>CORRIGIR</button>
                 </form>
@@ -350,7 +349,7 @@ export default function App() {
             <img className='figura1' src={Figura1ComoFunciona} alt="Figura lendo livro"/>
             <div className="textos-como-funciona">
               <h1 className="titulo-como-funciona">COMO FUNCIONA?</h1>
-              <p className="texto-como-funciona full-size">A nossa plataforma de avaliação de redações usa a tecnologia da CIRA para fornecer análises precisas e eficientes de seus textos. Com apenas alguns cliques, você pode enviar sua redação e receber uma avaliação de 0 a 1000 em questão de segundos.</p>
+              <p className="texto-como-funciona full-size">A plataforma de avaliação de redações usa a tecnologia da CIRA para fornecer análises precisas e eficientes de seus textos. Com apenas alguns cliques, você pode enviar sua redação e receber uma avaliação de 0 a 1000 em questão de segundos.</p>
             </div>
           </div>
 
