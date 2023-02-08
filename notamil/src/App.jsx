@@ -98,11 +98,10 @@ export default function App() {
     var erro = redacao.split('%').length; 
 
     if (numeroPalavras >= 300 && erro === 1) {
-       await axios.get('http://143.107.183.175:15680/score_essay?text=' + redacao)
+       await axios.get('https://notamil-api.onrender.com/cira/' + redacao)
       .then((resp) => {
         setRedacaoCorrigida(resp.data); 
         if(resp.status === 200){
-          
           mostrarPontuacao();
         }
       })
@@ -126,16 +125,7 @@ export default function App() {
 
     if (tema !== "" && erro === 1) {
       setLoading(true);
-      await axios.post('https://api.openai.com/v1/completions',{
-        model: "text-davinci-003",
-        prompt: "faça uma redação do gênero dissertativo-argumentativo sobre" + tema + " considerando que é de extrema importancia a redação conter no minimo 430 palavras e que tenha somente 4 parágrafos contendo introdução, desenvolvimento e conclusão. tente também fazer citações relevantes ao tema e não se esqueça que é de extrema importância o texto estar em terceira pessoa",
-        max_tokens: 3000
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer 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'
-        }
-      })
+      await axios.get('https://notamil-api.onrender.com/chatgpt/' + tema)
       .then((resp) => {
         if (resp.status === 200){
           setRedacaoGerada(resp.data.choices[0].text);
