@@ -73,9 +73,19 @@ header{
   color: #353535;
 }
 
+.link-header:hover{
+  color: #42A3B1;
+  border-bottom: #42A3B1 3px solid;
+}
+
 .link-header:last-child{
   border: #353535 3px solid;
   padding: 5px 12px;
+}
+
+.link-header:last-child:hover{
+  color: #42A3B1;
+  border: #42A3B1 3px solid;
 }
 
 .logo-menu{

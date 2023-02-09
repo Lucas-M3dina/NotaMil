@@ -247,7 +247,7 @@ export default function App() {
           <nav className="container-links-header">
             <Link to='https://lucasmedina.vercel.app' target="_blank" className="link-header">Sobre mim</Link>
             <Link to='#jsComoFunciona' onClick={(e) => {ScrollSuave(e)}} className="link-header">Como funciona?</Link>
-            <Link to='#jsBoxPrincipal' onClick={(e) => {ScrollSuave(e)}} className="link-header">Comece ja</Link>
+            <Link to='#jsBoxPrincipal' onClick={(e) => {ScrollSuave(e)}} className="link-header">Comece já</Link>
           </nav>
           <img className="logo-menu" src={Bars} alt="Menu hamburguer" onClick={() => {mostrarMenu()}} />
         </div>
@@ -353,7 +353,7 @@ export default function App() {
 
           <div className="container-como-funciona animaScroll">
             <img className='figura1' src={Figura3ComoFunciona} alt="Figura com robo"  />
-            <p className="texto-como-funciona">A plataforma usa a inteligência artificial ChatGPT para gerar redações em questão de minutos. Basta fornecer o tema e a tecnologia fará o resto. Você pode ter certeza de que a I.A fará o máximo sua redação será efetiva e impactante</p>
+            <p className="texto-como-funciona">A plataforma usa a inteligência artificial ChatGPT para gerar redações em questão de minutos. Basta fornecer o tema e a tecnologia fará o resto. Você pode ter certeza de que a I.A fará o máximo para sua redação ser efetiva e impactante</p>
           </div>
         </section>
       </main>
