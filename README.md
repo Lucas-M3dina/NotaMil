@@ -1,5 +1,5 @@
 # 📖 NotaMil - Plataforma de Avaliação e Geração de Redações por IA
-O NotaMil é uma plataforma que permite avaliar redações e gerar novas redações através de inteligência artificial. Nossa missão é ajudar estudantes a melhorarem suas habilidades de escrita e avaliando sua redação de 0 a 1000, alem de gerar uma redação de qualquer tema .
+O <a href="https://notamil.vercel.app">NotaMil</a> é uma plataforma que permite avaliar redações e gerar novas redações através de inteligência artificial. Nossa missão é ajudar estudantes a melhorarem suas habilidades de escrita e avaliando sua redação de 0 a 1000, alem de gerar uma redação de qualquer tema .
  
 <br>
 <br>
