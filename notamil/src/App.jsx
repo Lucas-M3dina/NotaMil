@@ -137,7 +137,7 @@ export default function App() {
       })
       .catch((erro) => {
         setLoading(false);
-        setMensagemErro('Esse serviço depende da disponibilidade da I.A ChatGPT e houve um erro na comunicação com a tecnologia')
+        setMensagemErro('Esse serviço depende da disponibilidade da I.A ChatGPT e houve um erro na comunicação com a tecnologia, aguarde e tente novamente mais tarde')
         mostrarErro()
         
       })
